@@ -145,6 +145,27 @@ app.delete("/api/dishes/:id", async (req, res) => {
   }
 });
 
+app.put("/api/dishes/:id", async (req, res) => {
+  const { name, ingredients, price, totalCost, profit, margin } = req.body;
+
+  try {
+    const updatedDish = await Dish.findByIdAndUpdate(
+      req.params.id,
+      { name, ingredients, price, totalCost, profit, margin },
+      { new: true } // Devuelve el documento actualizado
+    );
+
+    if (!updatedDish) {
+      return res.status(404).send("Plato no encontrado");
+    }
+
+    res.json(updatedDish);
+  } catch (error) {
+    res.status(500).send("Error al actualizar el plato");
+  }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en Puerto: ${PORT}`);
